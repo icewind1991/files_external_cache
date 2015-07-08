@@ -20,7 +20,7 @@
  */
 namespace OCA\Files_External_Cache\Tests;
 
-class TestCase extends \Test\TestCase {
+abstract class TestCase extends \Test\TestCase {
 	/**
 	 * @param resource $handle
 	 * @return string[]
