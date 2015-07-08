@@ -38,19 +38,7 @@ class OnionWrapper extends Common {
 	public function __construct($parameters) {
 		$this->storages = $parameters['storages'];
 	}
-
-	/**
-	 * Get all storages where a path exists
-	 *
-	 * @param string $path
-	 * @return \OC\Files\Storage\Storage[]
-	 */
-	protected function getStoragesForPath($path) {
-		return array_filter($this->storages, function (Storage $storage) use ($path) {
-			return $storage->file_exists($path);
-		});
-	}
-
+	
 	/**
 	 * Get the first storage where a path exists
 	 *
