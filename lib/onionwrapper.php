@@ -113,7 +113,7 @@ class OnionWrapper extends Common {
 	 * {@inheritdoc}
 	 */
 	public function mkdir($path) {
-		$this->storages[0]->mkdir($path);
+		return $this->storages[0]->mkdir($path);
 	}
 
 	/**
