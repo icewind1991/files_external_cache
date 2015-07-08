@@ -73,7 +73,7 @@ class OnionDir implements Directory {
 	}
 
 	/**
-	 * @return string
+	 * @return string | false
 	 */
 	public function dir_readdir() {
 		$file = readdir($this->handles[$this->activeHandle]);
@@ -128,7 +128,12 @@ class OnionDir implements Directory {
 				'handles' => $handles)
 		));
 		stream_wrapper_register('oniondir', '\OCA\Files_External_Cache\OnionDir');
-		$wrapped = opendir('oniondir://', $context);
+		try {
+			$wrapped = opendir('oniondir://', $context);
+		} catch (\BadMethodCallException $e) {
+			stream_wrapper_unregister('oniondir');
+			throw $e;
+		}
 		stream_wrapper_unregister('oniondir');
 		return $wrapped;
 	}

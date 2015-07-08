@@ -87,4 +87,37 @@ class OnionDirTest extends TestCase {
 		rewinddir($handle);
 		$this->assertHandleContent($expected, $handle);
 	}
+
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testInvalidHandles() {
+		$context = stream_context_create(array(
+			'dir' => array(
+				'handles' => false)
+		));
+		stream_wrapper_register('oniondir', '\OCA\Files_External_Cache\OnionDir');
+		try {
+			opendir('oniondir://', $context);
+		} catch (\Exception $e) {
+			stream_wrapper_unregister('oniondir');
+			throw $e;
+		}
+		stream_wrapper_unregister('oniondir');
+	}
+
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testNoContenxt() {
+		stream_wrapper_register('oniondir', '\OCA\Files_External_Cache\OnionDir');
+		try {
+			opendir('oniondir://');
+		} catch (\Exception $e) {
+			stream_wrapper_unregister('oniondir');
+			throw $e;
+		}
+
+		stream_wrapper_unregister('oniondir');
+	}
 }
