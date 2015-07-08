@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<info>
+	<id>files_external_cache</id>
+	<name>External storage caching</name>
+	<description>Caching for external storage backends</description>
+	<licence>AGPL</licence>
+	<author>Robin Appelman</author>
+	<types>
+		<filesystem/>
+	</types>
+
+	<dependencies>
+		<owncloud min-version="8.1"/>
+	</dependencies>
+</info>
