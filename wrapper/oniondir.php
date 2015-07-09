@@ -73,7 +73,7 @@ class OnionDir implements Directory {
 	}
 
 	/**
-	 * @return string | false
+	 * @return string | boolean
 	 */
 	public function dir_readdir() {
 		$file = readdir($this->handles[$this->activeHandle]);
