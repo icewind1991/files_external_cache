@@ -22,6 +22,21 @@ namespace OCA\Files_External_Cache\Tests;
 
 abstract class TestCase extends \Test\TestCase {
 	/**
+	 * @var \OC_User_Dummy
+	 */
+	protected $userProvider;
+
+	public function setUp() {
+		parent::setUp();
+		$this->userProvider = new \OC_User_Dummy();
+		\OC::$server->getUserManager()->registerBackend($this->userProvider);
+	}
+
+	public function tearDown() {
+		\OC::$server->getUserManager()->removeBackend($this->userProvider);
+	}
+
+	/**
 	 * @param resource $handle
 	 * @return string[]
 	 */
