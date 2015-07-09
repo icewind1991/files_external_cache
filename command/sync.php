@@ -70,20 +70,13 @@ class Sync implements ICommand {
 
 	public function handle() {
 		\OC_Util::setupFS($this->userId);
-		$mountManager = \OC::$server->getMountManager();
-		$sourceMounts = $mountManager->findByNumericId($this->sourceStorageId);
-		$targetMounts = $mountManager->findByNumericId($this->targetStorageId);
-		if (count($sourceMounts) < 1 or count($targetMounts) < 1) {
-			return;
-		}
+		$sourceStorage = $this->getStorageById($this->sourceStorageId);
+		$targetStorage = $this->getStorageById($this->targetStorageId);
 
-		$sourceStorage = $sourceMounts[0]->getStorage();
-		$targetStorage = $targetMounts[0]->getStorage();
-
-		/**
-		 * dont sync if we had another write to the source file
-		 */
-		if ($sourceStorage->filemtime($this->file) > $this->mtime) {
+		if (is_null($sourceStorage) or
+			is_null($targetStorage) or
+			$sourceStorage->filemtime($this->file) > $this->mtime
+		) {
 			return;
 		}
 
@@ -91,5 +84,15 @@ class Sync implements ICommand {
 			$targetStorage->mkdir(dirname($this->file));
 		}
 		$targetStorage->copyFromStorage($sourceStorage, $this->file, $this->file);
+	}
+
+	private function getStorageById($id) {
+		$mountManager = \OC::$server->getMountManager();
+		$mounts = $mountManager->findByNumericId($id);
+		if (count($mounts) > 0) {
+			return $mounts[0]->getStorage();
+		} else {
+			return null;
+		}
 	}
 }
