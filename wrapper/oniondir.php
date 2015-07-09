@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-namespace OCA\Files_External_Cache;
+namespace OCA\Files_External_Cache\Wrapper;
 
 use Icewind\Streams\Directory;
 
@@ -127,7 +127,7 @@ class OnionDir implements Directory {
 			'dir' => array(
 				'handles' => $handles)
 		));
-		stream_wrapper_register('oniondir', '\OCA\Files_External_Cache\OnionDir');
+		stream_wrapper_register('oniondir', '\OCA\Files_External_Cache\Wrapper\OnionDir');
 		try {
 			$wrapped = opendir('oniondir://', $context);
 		} catch (\BadMethodCallException $e) {

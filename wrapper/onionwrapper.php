@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-namespace OCA\Files_External_Cache;
+namespace OCA\Files_External_Cache\Wrapper;
 
 use OC\Files\Storage\Common;
 use OC\Files\Storage\Storage;

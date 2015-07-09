@@ -18,10 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-namespace OCA\Files_External_Cache\Tests;
+namespace OCA\Files_External_Cache\Tests\Wrapper;
 
 use Icewind\Streams\IteratorDirectory;
-use OCA\Files_External_Cache\OnionDir;
+use OCA\Files_External_Cache\Tests\TestCase;
+use OCA\Files_External_Cache\Wrapper\OnionDir;
 
 class OnionDirTest extends TestCase {
 	public function directoryProvider() {
@@ -96,7 +97,7 @@ class OnionDirTest extends TestCase {
 			'dir' => array(
 				'handles' => false)
 		));
-		stream_wrapper_register('oniondir', '\OCA\Files_External_Cache\OnionDir');
+		stream_wrapper_register('oniondir', '\OCA\Files_External_Cache\Wrapper\OnionDir');
 		try {
 			opendir('oniondir://', $context);
 		} catch (\Exception $e) {
@@ -110,7 +111,7 @@ class OnionDirTest extends TestCase {
 	 * @expectedException \BadMethodCallException
 	 */
 	public function testNoContenxt() {
-		stream_wrapper_register('oniondir', '\OCA\Files_External_Cache\OnionDir');
+		stream_wrapper_register('oniondir', '\OCA\Files_External_Cache\Wrapper\OnionDir');
 		try {
 			opendir('oniondir://');
 		} catch (\Exception $e) {

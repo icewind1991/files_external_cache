@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-namespace OCA\Files_External_Cache\Tests;
+namespace OCA\Files_External_Cache\Tests\Wrapper;
 
 use OC\Files\Storage\Temporary;
-use OCA\Files_External_Cache\OnionWrapper;
+use OCA\Files_External_Cache\Wrapper\OnionWrapper;
 use Test\Files\Storage\Storage;
 
 /**
