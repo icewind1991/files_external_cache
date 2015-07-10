@@ -40,9 +40,9 @@ class CopyWrapperTest extends TestCase {
 
 	public function streamContentProvider() {
 		return [
-			['foobar'],
+			[str_repeat('foobarasd', 1000)],
 			[''],
-			[file_get_contents(__FILE__)]
+			[str_repeat(file_get_contents(__FILE__), 1000)]
 		];
 	}
 
