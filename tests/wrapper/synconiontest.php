@@ -125,4 +125,22 @@ class SyncOnionTest extends TestCase {
 		$this->assertTrue($this->storage2->file_exists('foo.txt'));
 		$this->assertEquals('foo', $this->storage2->file_get_contents('foo.txt'));
 	}
+
+	public function testSyncFopenRead() {
+		$this->onion->file_put_contents('foo.txt', 'bar');
+		$fh = $this->onion->fopen('foo.txt', 'r');
+		$this->assertEquals('bar', stream_get_contents($fh));
+		fclose($fh);
+	}
+
+	/**
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testInvalidStorageCount() {
+		$this->onion = new SyncOnionWrapper([
+			'storages' => [$this->storage1],
+			'userid' => '',
+			'bus' => \OC::$server->getCommandBus()
+		]);
+	}
 }
