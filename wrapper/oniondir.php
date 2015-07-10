@@ -128,12 +128,7 @@ class OnionDir implements Directory {
 				'handles' => $handles)
 		));
 		stream_wrapper_register('oniondir', '\OCA\Files_External_Cache\Wrapper\OnionDir');
-		try {
-			$wrapped = opendir('oniondir://', $context);
-		} catch (\BadMethodCallException $e) {
-			stream_wrapper_unregister('oniondir');
-			throw $e;
-		}
+		$wrapped = opendir('oniondir://', $context);
 		stream_wrapper_unregister('oniondir');
 		return $wrapped;
 	}
