@@ -141,6 +141,16 @@ class SyncOnionTest extends TestCase {
 		$this->assertEquals('bar', $this->storage1->file_get_contents('foo.txt'));
 	}
 
+	public function testSyncFopenReadIncomplete() {
+		$data = str_repeat(file_get_contents(__FILE__), 8);
+		$this->storage2->file_put_contents('foo.txt', $data);
+		$this->assertFalse($this->storage1->file_exists('foo.txt'));
+		$fh = $this->onion->fopen('foo.txt', 'r');
+		$this->assertEquals(substr($data, 0, 100), stream_get_contents($fh, 100));
+		fclose($fh);
+		$this->assertFalse($this->storage1->file_exists('foo.txt'));
+	}
+
 	public function testSyncFileGetContent() {
 		$this->storage2->file_put_contents('foo.txt', 'bar');
 		$this->assertFalse($this->storage1->file_exists('foo.txt'));
