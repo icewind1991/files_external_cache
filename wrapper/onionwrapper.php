@@ -396,7 +396,7 @@ class OnionWrapper extends Common {
 		$storage = $this->storages[0];
 		$storage->mkdir(dirname($targetInternalPath));
 
-		$storage->copyFromStorage($sourceStorage, $sourceInternalPath, $targetInternalPath);
+		return $storage->copyFromStorage($sourceStorage, $sourceInternalPath, $targetInternalPath);
 	}
 
 	/**
@@ -406,7 +406,7 @@ class OnionWrapper extends Common {
 		$storage = $this->storages[0];
 		$storage->mkdir(dirname($targetInternalPath));
 
-		$storage->moveFromStorage($sourceStorage, $sourceInternalPath, $targetInternalPath);
+		return $storage->moveFromStorage($sourceStorage, $sourceInternalPath, $targetInternalPath);
 	}
 
 	/**
