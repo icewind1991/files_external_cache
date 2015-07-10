@@ -101,8 +101,8 @@ class CopyStreamWrapper extends Wrapper {
 
 	public function stream_close() {
 		$callback = $this->callback;
-		$callback((!$this->aborted) and feof($this->source));
 		fclose($this->target);
+		$callback((!$this->aborted) and feof($this->source));
 		return parent::stream_close();
 	}
 }

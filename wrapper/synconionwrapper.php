@@ -82,6 +82,16 @@ class SyncOnionWrapper extends OnionWrapper {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function file_get_contents($path) {
+		if (!$this->storages[0]->file_exists($path)) {
+			$this->storages[0]->copyFromStorage($this->storages[1], $path, $path);
+		}
+		return $this->storages[0]->file_get_contents($path);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function copy($source, $target) {
 		$result = parent::copy($source, $target);
 		if ($result) {
@@ -96,8 +106,17 @@ class SyncOnionWrapper extends OnionWrapper {
 	public function fopen($path, $mode) {
 		$fh = parent::fopen($path, $mode);
 		if ($mode[0] !== 'r' and is_resource($fh)) {
+			// upload the file on write
 			return CallbackWrapper::wrap($fh, null, null, function () use ($path) {
 				$this->scheduleSync($path);
+			});
+		} elseif ($fh and !$this->storages[0]->file_exists($path)) {
+			// copy the file if needed
+			$target = $this->storages[0]->fopen($path, 'w');
+			return CopyStreamWrapper::wrap($fh, $target, function ($success) use ($path) {
+				if (!$success) {
+					$this->storages[0]->unlink($path);
+				}
 			});
 		} else {
 			return $fh;

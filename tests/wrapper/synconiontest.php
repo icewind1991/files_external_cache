@@ -126,11 +126,27 @@ class SyncOnionTest extends TestCase {
 		$this->assertEquals('foo', $this->storage2->file_get_contents('foo.txt'));
 	}
 
-	public function testSyncFopenRead() {
-		$this->onion->file_put_contents('foo.txt', 'bar');
+	public function testSyncFopenNotExists() {
+		$fh = $this->onion->fopen('foo.txt', 'r');
+		$this->assertFalse($fh);
+	}
+
+	public function testSyncFopenReadFull() {
+		$this->storage2->file_put_contents('foo.txt', 'bar');
+		$this->assertFalse($this->storage1->file_exists('foo.txt'));
 		$fh = $this->onion->fopen('foo.txt', 'r');
 		$this->assertEquals('bar', stream_get_contents($fh));
 		fclose($fh);
+		$this->assertTrue($this->storage1->file_exists('foo.txt'));
+		$this->assertEquals('bar', $this->storage1->file_get_contents('foo.txt'));
+	}
+
+	public function testSyncFileGetContent() {
+		$this->storage2->file_put_contents('foo.txt', 'bar');
+		$this->assertFalse($this->storage1->file_exists('foo.txt'));
+		$this->assertEquals('bar', $this->onion->file_get_contents('foo.txt'));
+		$this->assertTrue($this->storage1->file_exists('foo.txt'));
+		$this->assertEquals('bar', $this->storage1->file_get_contents('foo.txt'));
 	}
 
 	/**
