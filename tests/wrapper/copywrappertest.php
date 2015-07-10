@@ -77,6 +77,8 @@ class CopyWrapperTest extends TestCase {
 
 		stream_get_contents($stream, strlen($content) / 2);
 
+		$this->assertFalse(feof($source));
+
 		fclose($stream);
 	}
 
