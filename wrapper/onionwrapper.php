@@ -334,7 +334,9 @@ class OnionWrapper extends Common {
 	 * {@inheritdoc}
 	 */
 	public function hasUpdated($path, $time) {
-		return false;
+		return array_reduce($this->storages, function ($updated, Storage $storage) use ($path, $time) {
+			return $updated or $storage->hasUpdated($path, $time);
+		}, false);
 	}
 
 	/**

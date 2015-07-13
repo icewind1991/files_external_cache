@@ -173,4 +173,11 @@ class SyncOnionWrapper extends OnionWrapper {
 		$this->scheduleSync($targetInternalPath);
 		return $result;
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function hasUpdated($path, $time) {
+		return false;
+	}
 }

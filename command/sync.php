@@ -75,12 +75,14 @@ class Sync implements ICommand {
 		$sourceStorage = $this->getStorageById($this->sourceStorageId);
 		$targetStorage = $this->getStorageById($this->targetStorageId);
 
+		if (is_null($targetStorage)) {
+			return;
+		}
+
 		if ($targetStorage->instanceOfStorage('OCA\Files_External_Cache\Wrapper\SyncOnionWrapper') and !$sourceStorage) {
 			/** @var SyncOnionWrapper $targetStorage */
 			$sourceStorage = $targetStorage->getCacheStorage();
 			$targetStorage = $targetStorage->getBackendStorage();
-		} else {
-			return;
 		}
 
 		if (is_null($sourceStorage) or
