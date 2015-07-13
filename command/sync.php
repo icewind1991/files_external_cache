@@ -21,6 +21,7 @@
 namespace OCA\Files_External_Cache\Command;
 
 use OC\Command\FileAccess;
+use OCA\Files_External_Cache\Cache\Expirer;
 use OCA\Files_External_Cache\Wrapper\SyncOnionWrapper;
 use OCP\Command\ICommand;
 
@@ -93,6 +94,8 @@ class Sync implements ICommand {
 			$targetStorage->mkdir(dirname($this->file));
 		}
 		$targetStorage->copyFromStorage($sourceStorage, $this->file, $this->file);
+		$expirer = new Expirer($sourceStorage, 100 * 1024 * 1024); //todo get limit from mount option, 100mb for now
+		$expirer->expire();
 	}
 
 	private function getStorageById($id) {
