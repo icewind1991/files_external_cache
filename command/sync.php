@@ -21,6 +21,7 @@
 namespace OCA\Files_External_Cache\Command;
 
 use OC\Command\FileAccess;
+use OCA\Files_External_Cache\Wrapper\SyncOnionWrapper;
 use OCP\Command\ICommand;
 
 class Sync implements ICommand {
@@ -72,6 +73,14 @@ class Sync implements ICommand {
 		\OC_Util::setupFS($this->userId);
 		$sourceStorage = $this->getStorageById($this->sourceStorageId);
 		$targetStorage = $this->getStorageById($this->targetStorageId);
+
+		if ($targetStorage->instanceOfStorage('OCA\Files_External_Cache\Wrapper\SyncOnionWrapper') and !$sourceStorage) {
+			/** @var SyncOnionWrapper $targetStorage */
+			$sourceStorage = $targetStorage->getCacheStorage();
+			$targetStorage = $targetStorage->getBackendStorage();
+		} else {
+			return;
+		}
 
 		if (is_null($sourceStorage) or
 			is_null($targetStorage) or
