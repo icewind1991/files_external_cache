@@ -77,7 +77,7 @@ class OnionDir implements Directory {
 	 */
 	public function dir_readdir() {
 		$file = readdir($this->handles[$this->activeHandle]);
-		if ($file === false) {
+		if ($file === false or is_null($file)) {
 			if ($this->activeHandle < (count($this->handles) - 1)) {
 				$this->activeHandle++;
 				return $this->dir_readdir();
