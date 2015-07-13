@@ -53,6 +53,27 @@ class SyncOnionWrapper extends OnionWrapper {
 	}
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function getId() {
+		return $this->storages[1]->getId();
+	}
+
+	/**
+	 * @return Storage
+	 */
+	public function getBackendStorage() {
+		return $this->storages[1];
+	}
+
+	/**
+	 * @return Storage
+	 */
+	public function getCacheStorage() {
+		return $this->storages[0];
+	}
+
+	/**
 	 * Add a sync command to the command bus for the target path
 	 *
 	 * @param string $path
@@ -103,6 +124,17 @@ class SyncOnionWrapper extends OnionWrapper {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function rename($source, $target) {
+		$result = parent::rename($source, $target);
+		if ($result and !$this->storages[1]->file_exists($target)) {
+			$this->scheduleSync($target);
+		}
+		return $result;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function fopen($path, $mode) {
 		$fh = parent::fopen($path, $mode);
 		if ($mode[0] !== 'r' and is_resource($fh)) {
@@ -112,6 +144,7 @@ class SyncOnionWrapper extends OnionWrapper {
 			});
 		} elseif ($fh and !$this->storages[0]->file_exists($path)) {
 			// copy the file if needed
+			$this->storages[0]->mkdir(dirname($path));
 			$target = $this->storages[0]->fopen($path, 'w');
 			return CopyStreamWrapper::wrap($fh, $target, function ($success) use ($path) {
 				if (!$success) {
