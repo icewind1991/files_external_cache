@@ -38,7 +38,7 @@ class OnionWrapper extends Common {
 	public function __construct($parameters) {
 		$this->storages = $parameters['storages'];
 	}
-	
+
 	/**
 	 * Get the first storage where a path exists
 	 *
@@ -70,13 +70,16 @@ class OnionWrapper extends Common {
 	/**
 	 * @param string $path
 	 * @param callable $operation
+	 * @param boolean $exists only run if the file exists on the storage
 	 * @return bool
 	 */
-	protected function runOnAllStorages($path, callable $operation) {
+	protected function runOnAllStorages($path, callable $operation, $exists = false) {
 		$result = true;
 		foreach ($this->storages as $storage) {
-			$newResult = $operation($storage, $path);
-			$result = ($result and $newResult);
+			if (!$exists or $storage->file_exists($path)) {
+				$newResult = $operation($storage, $path);
+				$result = ($result and $newResult);
+			}
 		}
 		return $result;
 	}
@@ -121,7 +124,7 @@ class OnionWrapper extends Common {
 		$handles = array_filter($handles, function ($handle) {
 			return is_resource($handle);
 		});
-		return OnionDir::wrap($handles);
+		return OnionDir::wrap(array_values($handles));
 	}
 
 	/**
@@ -246,7 +249,7 @@ class OnionWrapper extends Common {
 	public function rename($source, $target) {
 		return $this->runOnAllStorages($source, function (Storage $storage) use ($source, $target) {
 			return $storage->rename($source, $target);
-		});
+		}, true);
 	}
 
 	/**
@@ -331,9 +334,7 @@ class OnionWrapper extends Common {
 	 * {@inheritdoc}
 	 */
 	public function hasUpdated($path, $time) {
-		return array_reduce($this->storages, function ($updated, Storage $storage) use ($path, $time) {
-			return $updated or $storage->hasUpdated($path, $time);
-		}, false);
+		return false;
 	}
 
 	/**
